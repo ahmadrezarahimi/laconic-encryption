@@ -9,14 +9,35 @@ import (
 	"lattice-LE-go/matrix"
 	"math"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 )
 
 func main() {
 
+	dirName := "trees"
+
+	_, err := os.Stat(dirName)
+	if err == nil {
+		fmt.Println("Directory exists, removing...")
+		if err := os.RemoveAll(dirName); err != nil {
+			fmt.Println("Error removing directory:", err)
+			return
+		}
+	} else if os.IsNotExist(err) {
+		fmt.Println("Directory does not exist, creating...")
+	} else {
+		fmt.Println("Error checking directory:", err)
+		return
+	}
+	if err := os.Mkdir(dirName, 0700); err != nil {
+		fmt.Println("Error creating directory:", err)
+		return
+	}
+
 	start := time.Now()
-	le := LE.Setup(180143985094819841, 58, 1024, 4)
+	le := LE.Setup(180143985094819841, 58, 256, 4)
 	end := time.Now()
 	fmt.Println("Setting up the system takes: ", end.Sub(start))
 	fmt.Println("Running system with 1000 users and d = 256")
